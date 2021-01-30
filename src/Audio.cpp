@@ -430,7 +430,13 @@ bool Audio::connecttoFS(fs::FS &fs, String file) {
     sprintf(chbuf, "Reading file: \"%s\"", m_audioName.c_str());
     if(audio_info) audio_info(chbuf);
     audiofile = fs.open(path);
-    
+
+    if(fs.exists(path)) {
+        audiofile = fs.open(path); // #86
+    } else {
+        audiofile = fs.open(s_file);
+    }
+
     m_file_size = audiofile.size();//TEST loop
     
     if(!audiofile) {
